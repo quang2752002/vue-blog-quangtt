@@ -219,16 +219,14 @@
                         $("#note").val(res.data.note);
                         $("#detail").val(res.data.detail);
 
-                        // Set the radio button based on state
-                        var state = res.data.state; // Assuming res.data.state is true/false
+                        var state = res.data.state; 
                         if (state) {
                             $("input[name='status'][value='true']").prop('checked', true);
                         } else {
                             $("input[name='status'][value='false']").prop('checked', true);
                         }
 
-                        // Populate checkboxes based on arr
-                        var arr = res.arr; // Assuming res.arr contains an array of location IDs
+                        var arr = res.arr;
 
                         $('.namecate').each(function () {
                             var checkboxValue = $(this).val();
