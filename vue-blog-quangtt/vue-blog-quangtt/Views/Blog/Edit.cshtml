@@ -1,8 +1,7 @@
 ﻿@{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <div class="card">
     <div class="card-header">
@@ -11,35 +10,31 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-12 p-1">
-
-
                 <label>Tiêu đề</label>
                 <br />
                 <input type="text" class="form-control" id="name" />
-
+                <span id="name-error" class="text-danger"></span>
             </div>
 
             <div class="col-md-12 p-1">
-
                 <label>Mô tả ngắn</label>
                 <br />
                 <textarea type="text" class="form-control" id="note"></textarea>
-
+                <span id="note-error" class="text-danger"></span>
             </div>
 
             <div class="col-md-12 p-1">
                 <label>Chi tiết</label>
                 <br />
                 <textarea type="text" class="form-control" id="detail"></textarea>
+                <span id="detail-error" class="text-danger"></span>
             </div>
 
             <div class="col-md-12 p-1">
-
-
                 <label>Vị trí</label>
                 <br />
                 <div id="listLocation"></div>
-
+                <span id="location-error" class="text-danger"></span>
             </div>
 
             <div class="col-md-12 p-1">
@@ -49,32 +44,26 @@
                     <div class="col-md-11">
                         <input type="radio" name="status" value="true" /> Yes
                         <input type="radio" name="status" value="false" /> No
+                        <span id="status-error" class="text-danger"></span>
                     </div>
                 </div>
             </div>
 
             <div class="col-md-12 p-1">
-
-
                 <label>Loại</label>
                 <br />
                 <input type="text" class="form-control" id="type" />
-
+                <span id="type-error" class="text-danger"></span>
             </div>
 
-
-
-
             <div class="col-md-12 p-1">
-
                 <label>Ngày public</label>
                 <br />
                 <input type="datetime-local" class="form-control" id="date" />
-
+                <span id="date-error" class="text-danger"></span>
             </div>
         </div>
         <input type="button" id="update" class="btn btn-primary btn-user btn-block" value="Update" />
-
     </div>
 </div>
 
@@ -88,7 +77,76 @@
                     blog.update();
                 });
             },
+            validate: function () {
+                var isValid = true;
+
+                var name = $("#name").val();
+                var note = $("#note").val();
+                var detail = $("#detail").val();
+                var status = $("input[name='status']:checked").val();
+                var type = $("#type").val();
+                var date = $("#date").val();
+                var locations = $('.namecate:checked').length;
+
+                if (!name) {
+                    $("#name-error").text("Tiêu đề là bắt buộc.");
+                    isValid = false;
+                } else if (name.length > 100) {
+                    $("#name-error").text("Tiêu đề không được dài hơn 100 ký tự.");
+                    isValid = false;
+                } else {
+                    $("#name-error").text("");
+                }
+
+                if (!note) {
+                    $("#note-error").text("Mô tả ngắn là bắt buộc.");
+                    isValid = false;
+                } else {
+                    $("#note-error").text("");
+                }
+
+                if (!detail) {
+                    $("#detail-error").text("Chi tiết là bắt buộc.");
+                    isValid = false;
+                } else {
+                    $("#detail-error").text("");
+                }
+
+                if (!status) {
+                    $("#status-error").text("Vui lòng chọn trạng thái.");
+                    isValid = false;
+                } else {
+                    $("#status-error").text("");
+                }
+
+                if (!type) {
+                    $("#type-error").text("Loại là bắt buộc.");
+                    isValid = false;
+                } else {
+                    $("#type-error").text("");
+                }
+
+                if (!date) {
+                    $("#date-error").text("Ngày public là bắt buộc.");
+                    isValid = false;
+                } else {
+                    $("#date-error").text("");
+                }
+
+                if (locations == 0) {
+                    $("#location-error").text("Vui lòng chọn ít nhất một vị trí.");
+                    isValid = false;
+                } else {
+                    $("#location-error").text("");
+                }
+
+                return isValid;
+            },
             update: function () {
+                if (!blog.validate()) {
+                    return;
+                }
+
                 var name = $("#name").val();
                 var type = $("#type").val();
                 var state = $("input[name='status']:checked").val();
