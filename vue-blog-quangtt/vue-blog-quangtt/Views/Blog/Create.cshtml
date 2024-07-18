@@ -1,0 +1,152 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+	<div class="card-header">
+		<h4>Create Blogs</h4>
+	</div>
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-12 p-1">
+			
+					
+					<label>Tiêu đề</label>	
+					<br />
+					<input type="text" class="form-control" id="name" />
+				
+			</div>
+
+			<div class="col-md-12 p-1">
+
+				<label>Mô tả ngắn</label>
+				<br />
+				<textarea type="text" class="form-control" id="note"></textarea>
+
+			</div>
+
+			<div class="col-md-12 p-1">
+				<label>Chi tiết</label>
+				<br />
+				<textarea type="text" class="form-control" id="detail"></textarea>
+			</div>
+
+			<div class="col-md-12 p-1">
+				
+					
+				<label>Vị trí</label>
+					<br />
+				<div id="listLocation"></div>
+				
+			</div>
+
+			<div class="col-md-12 p-1">
+				<div class="row">
+						<label>Public</label>
+					<br />
+					<div class="col-md-11">
+						<input type="radio" name="status" value="true" /> Yes
+						<input type="radio" name="status" value="false" /> No
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-12 p-1">
+				
+					
+					<label>Loại</label>
+					<br />
+					<input type="text" class="form-control" id="type" />
+			
+			</div>
+
+
+
+
+			<div class="col-md-12 p-1">
+				
+						<label>Ngày public</label>
+					<br />
+					<input type="datetime-local" class="form-control" id="date" />
+				
+			</div>
+		</div>
+
+		<input type="button" id="create" class="btn btn-primary btn-user btn-block" value="Create" />
+
+	</div>
+</div>
+
+@section scripts {
+	<script>
+		var blog = {
+			init: function () {
+				blog.listLocation();
+				$("#create").click(function () {
+					blog.create();
+				});
+			},
+			create: function () {
+				var name = $("#name").val();
+				var type = $("#type").val();
+				var state = $("input[name='status']:checked").val();
+				var note = $("#note").val();
+				var detail = $("#detail").val();
+				var arr = "";
+				$('.namecate:checked').each(function () {
+					arr += "-" + $(this).val();
+				});
+
+				var timeworkString = $("#date").val();
+				var timework = new Date(timeworkString);
+				var isoDate = timework.toISOString();
+
+				var form = new FormData();
+				form.append("name", name);
+				form.append("type", type);
+				form.append("state", state);
+				form.append("arr", arr);
+				form.append("date", isoDate);
+				form.append("note", note);
+				form.append("detail", detail);
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Blog/CreateBlog/',
+					success: function (res) {
+						alert(res.mess);
+					},
+					error: function (err) {
+						console.error("Error:", err);
+					}
+				});
+			},
+			listLocation: function () {
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					url: '/Blog/listLocation/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<input type='checkbox' value='" + a.id + "' class='namecate m-2' style='width: 20px; height: 20px'/>";
+							html += "<span>" + a.name + "</span>";
+						});
+						$("#listLocation").html(html);
+					},
+					error: function (err) {
+						console.error("Error:", err);
+					}
+				});
+			}
+		};
+
+		blog.init();
+	</script>
+}

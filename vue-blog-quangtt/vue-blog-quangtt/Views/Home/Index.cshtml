@@ -1,0 +1,144 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h4>Search Bolgs</h4>
+    </div>
+    <div class="card-body">
+        <input class="form-control" type="text" id="search" placeholder="Nhập tên blog cần tìm" />
+    </div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <h4>List BLogs</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-md-2">
+                <a href="/Blog/Create" class="btn btn-primary">Thêm mới</a>
+            </div>
+
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Id
+                    </th>
+                    <th>
+                        Tên
+                    </th>
+                    <th>
+                        Loại
+                    </th>
+
+                    <th>
+                        Trạng thái
+                    </th>
+                    <th>
+                        Vị trí
+                    </th>
+                    <th>
+                        Ngày public
+                    </th>
+                    <th>
+                        Edit
+                    </th>
+                    <th>
+                        Delete
+                    </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody id="tbData"></tbody>
+
+        </table>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        var blog = {
+            init: function () {
+                blog.search(1);
+                $("#search").change(function () {
+                    blog.search(1);
+                });
+            },
+            search: function (index) {
+                var name = $("#search").val();
+                var form = new FormData()
+                form.append("name", name);
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    data: form,
+                    url: '/Blog/ShowList/',
+                    success: function (res) {
+                        var html = "";
+                        $.each(res.data, function (index, a) {
+                            html += "<tr>";
+                            html += "<td>" + a.id + "</td>";
+                            html += "<td>" + a.name + "</td>";
+                            html += "<td>" + a.type + "</td>";
+                            if (a.state == true) {
+                                html += "<td>Yes</td>";
+                            }
+                            if (a.state == false) {
+                                html += "<td>No</td>";
+                            }
+                            html += "<td>" + a.location + "</td>";
+                            html += "<td>" + a.dateS + "</td>";
+                            html += "<td><a href='/Blog/Edit/" + a.id + "' class='btn btn-primary'>Edit</a></td>"
+                            html += "<td><button onclick='blog.delete(" + a.id + ")' class='btn btn-danger'>Delete</button></td>"
+
+                            html += "</tr>";
+                        });
+                        $("#tbData").html(html);
+
+                    },
+                });
+            },
+            delete: function (id) {
+                if (confirm("Are you sure you want to delete this item?")) {
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/Blog/Delete/' + id,
+                        success: function (res) {
+                            alert(res.mess);
+                            blog.search(1);
+                        },
+                        error: function (err) {
+                            console.error("Error deleting item:", err);
+                        }
+                    });
+                } else {
+                    console.log("Deletion cancelled by user.");
+                }
+            },
+
+
+
+
+
+
+        }
+        blog.init();
+        function goto(i) {
+            blog.search(i);
+        }
+    </script>
+}
+
+
