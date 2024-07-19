@@ -6,7 +6,7 @@
 
 		public string Name { get; set; }
 
-		public string Type { get; set; }
+		public int  IdType { get; set; }
 
 		public bool State { get; set; }
 
@@ -17,6 +17,7 @@
 
 		public string Detail { get; set; }
 		public string DateS { get; set; }
+        public string Type { get; set; }
 
 
     }

@@ -9,8 +9,6 @@ public partial class Blog
 
     public string? Name { get; set; }
 
-    public string? Type { get; set; }
-
     public bool? State { get; set; }
 
     public DateTime? Date { get; set; }
@@ -19,5 +17,9 @@ public partial class Blog
 
     public string? Detail { get; set; }
 
+    public int? IdType { get; set; }
+
     public virtual ICollection<BlogLocation> BlogLocations { get; set; } = new List<BlogLocation>();
+
+    public virtual Type? IdTypeNavigation { get; set; }
 }

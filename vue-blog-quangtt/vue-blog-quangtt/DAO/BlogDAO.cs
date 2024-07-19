@@ -23,16 +23,18 @@ namespace vue_blog_quangtt.DAO
 		public BlogVIEW getItemView(int id)//tìm blog theo id
 		{
 			var query = (from a in context.Blogs
+                         join b in context.Types on a.IdType equals b.Id
 						 where a.Id == id
 						 select new BlogVIEW
 						 {
 							 Id = a.Id,
 							 Name = a.Name ?? "",
-							 Type = a.Type ?? "",
+							 Type = b.Name ?? "",
 							 State = a.State ?? true,
 							 Date = a.Date.Value,
                              Note=a.Note,
-                             Detail=a.Detail
+                             Detail=a.Detail,
+                             IdType=a.IdType.Value,
 						 }).FirstOrDefault();
 
 			return query;
@@ -47,11 +49,12 @@ namespace vue_blog_quangtt.DAO
                         from bl in blogLocations.DefaultIfEmpty()
                         join loc in context.Locations on bl.IdLocation equals loc.Id into locations
                         from loc in locations.DefaultIfEmpty()
+                        join c in context.Types on a.IdType equals c.Id
                         select new BlogVIEW
                         {
                             Id = a.Id,
                             Name = a.Name,
-                            Type = a.Type,
+                            Type = c.Name,
                             State = a.State.Value,
                             Date = a.Date.Value,
                             DateS = a.Date.Value.ToString("dd/MM/yyyy hh:mm"),

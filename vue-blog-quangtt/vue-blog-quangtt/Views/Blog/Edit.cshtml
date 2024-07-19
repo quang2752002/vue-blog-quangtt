@@ -52,7 +52,7 @@
             <div class="col-md-12 p-1">
                 <label>Loại</label>
                 <br />
-                <input type="text" class="form-control" id="type" />
+                @Html.DropDownList("type", new SelectList(Enumerable.Empty<SelectListItem>(), "Id", "Name"), "Chọn Loại", new { @class = "form-control" })
                 <span id="type-error" class="text-danger"></span>
             </div>
 
@@ -73,8 +73,34 @@
             init: function () {
                 blog.listLocation();
                 blog.getBlog();
+                blog.addListeners();
                 $("#update").click(function () {
                     blog.update();
+                });
+            },
+            addListeners: function () {
+                $("#name").on("input", function () {
+                    $("#name-error").text("");
+                });
+                $("#note").on("input", function () {
+                    $("#note-error").text("");
+                });
+                $("#detail").on("input", function () {
+                    $("#detail-error").text("");
+                });
+                $("#type").on("change", function () {
+                    $("#type-error").text("");
+                });
+                $("input[name='status']").on("change", function () {
+                    $("#status-error").text("");
+                });
+                $("#date").on("input", function () {
+                    $("#date-error").text("");
+                });
+                $(document).on('change', '.namecate', function () {
+                    if ($('.namecate:checked').length > 0) {
+                        $("#location-error").text("");
+                    }
                 });
             },
             validate: function () {
@@ -164,7 +190,7 @@
 
                 var form = new FormData();
                 form.append("name", name);
-                form.append("type", type);
+                form.append("idType", type);
                 form.append("state", state);
                 form.append("arr", arr);
                 form.append("date", isoDate);
@@ -218,8 +244,9 @@
                         $("#date").val(res.data.date);
                         $("#note").val(res.data.note);
                         $("#detail").val(res.data.detail);
+                        blog.loadType();
 
-                        var state = res.data.state; 
+                        var state = res.data.state;
                         if (state) {
                             $("input[name='status'][value='true']").prop('checked', true);
                         } else {
@@ -242,9 +269,24 @@
                     }
                 });
             },
+            loadType: function () {
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: '/Blog/getListType/',
+                    success: function (res) {
+
+                        var html = "<option selected value='" + res.type.id + "'>" + res.type.name + "</option>"
+
+                        $.each(res.data, function (index, item) {
+                            html += "<option value='" + item.id + "'>" + item.name + "</option>"
+                            $("#type").html(html);
+                        });
+                    }
+                });
+            },
         };
 
         blog.init();
-
     </script>
 }

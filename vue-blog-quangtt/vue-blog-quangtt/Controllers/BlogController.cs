@@ -28,7 +28,7 @@ namespace vue_blog_quangtt.Controllers
         {
             return View();
         }
-        public JsonResult CreateBlog(string name, string type, bool state, string arr, DateTime date,string note,string detail)//thêm mới 
+        public JsonResult CreateBlog(string name, int Idtype, bool state, string arr, DateTime date,string note,string detail)//thêm mới 
         {
            
             BlogDAO blogDAO = new BlogDAO();
@@ -36,7 +36,7 @@ namespace vue_blog_quangtt.Controllers
             Blog blog = new Blog
             {
                 Name = name,
-                Type = type,
+                IdType = Idtype,
                 State = state,
                 Date = date,
                 Note = note,
@@ -89,7 +89,7 @@ namespace vue_blog_quangtt.Controllers
 
             return View();
         }
-        public JsonResult Update(string name, string type, bool state, string arr, DateTime date,string note, string detail)//chỉnh sửa  blog
+        public JsonResult Update(string name, int idType, bool state, string arr, DateTime date,string note, string detail)//chỉnh sửa  blog
         {
             int id = HttpContext.Session.GetInt32(IdBlog) ?? 0;
             BlogDAO blogDAO = new BlogDAO();
@@ -97,7 +97,7 @@ namespace vue_blog_quangtt.Controllers
             Blog blog = blogDAO.getItem(id);
 
             blog.Name = name;
-            blog.Type = type;
+            blog.IdType = idType;
             blog.State = state;
             blog.Date = date;
             blog.Note = note;
@@ -171,6 +171,15 @@ namespace vue_blog_quangtt.Controllers
 
             return Json(new { data = query, arr = arr });
         }
+        public JsonResult getListType()
+        {
+            TypeDAO typeDAO = new TypeDAO();
 
+            int id = HttpContext.Session.GetInt32(IdBlog) ?? 0;
+            var listType = typeDAO.getList();          // danh sách type
+            var type = typeDAO.getItemByIdBlog(id);  // lấy type cần update
+            return Json(new { data = listType ,type=type});
+        }
+       
     }
 }

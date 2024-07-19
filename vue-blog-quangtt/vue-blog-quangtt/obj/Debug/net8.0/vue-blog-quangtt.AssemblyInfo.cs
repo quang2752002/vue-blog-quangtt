@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("vue-blog-quangtt")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+360dcd0346cacb8b29ffc25207b862d2c518bc8c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ee612ca1f3914653e95b72893c9cab5c7a710ea")]
 [assembly: System.Reflection.AssemblyProductAttribute("vue-blog-quangtt")]
 [assembly: System.Reflection.AssemblyTitleAttribute("vue-blog-quangtt")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
